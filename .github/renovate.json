@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "repositories": ["hugojosefson/scatter-svg"],
   "schedule": [
     "before 6am on Monday"
   ],
