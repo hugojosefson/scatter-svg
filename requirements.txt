@@ -1,0 +1,11 @@
+# Python dependencies for scatter-svg visualization tool
+# Generated: 2025-10-14
+
+# Core plotting library
+matplotlib>=3.5.0,<4.0.0
+
+# Automatic label collision avoidance
+adjustText>=0.8,<1.0
+
+# Data manipulation and CSV handling
+pandas>=1.3.0,<3.0.0

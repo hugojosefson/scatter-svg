@@ -5,95 +5,23 @@
 Python tool using matplotlib + adjustText for collision-free scatter plots with
 professional-quality output.
 
-## Quick Start
-
-Using Docker (recommended):
-
-```bash
-# Pull the image
-docker pull docker.io/hugojosefson/scatter-svg
-
-# Generate SVG from JSON data
-cat data.json | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
-
-# Generate PNG with custom size
-cat data.json | docker run -i docker.io/hugojosefson/scatter-svg --format png --width 12 --height 8 > output.png
-```
-
-## Usage
-
-### Stdin to Stdout (Pipeline Workflow)
-
-```bash
-# JSON input
-cat model-data-example.json | ./plot-models-scatter.py > output.svg
-
-# CSV input
-cat model-data-example.csv | ./plot-models-scatter.py --format png > output.png
-```
-
-### File Input/Output
-
-```bash
-# Specify input and output files
-./plot-models-scatter.py --input data.json --output chart.svg
-
-# Different format
-./plot-models-scatter.py --input data.csv --output chart.pdf --format pdf
-```
-
-### Command Line Options
-
-```bash
-./plot-models-scatter.py [options]
-
-Options:
-  --input FILE       Input file (JSON or CSV). Default: stdin
-  --output FILE      Output file. Default: stdout
-  --format FORMAT    Output format: svg, png, pdf. Default: svg
-  --width INCHES     Figure width in inches. Default: 10
-  --height INCHES    Figure height in inches. Default: 6
-  --title TEXT       Chart title
-  --xlabel TEXT      X-axis label
-  --ylabel TEXT      Y-axis label
-```
-
-## Input Format
-
-### JSON Format
-
-```json
-[
-  {
-    "name": "Point A",
-    "x": 1.5,
-    "y": 2.3
-  },
-  {
-    "name": "Point B",
-    "x": 2.7,
-    "y": 1.8
-  }
-]
-```
-
-### CSV Format
-
-```csv
-name,x,y
-Point A,1.5,2.3
-Point B,2.7,1.8
-```
-
-See `model-data-example.json` and `model-data-example.csv` for complete
-examples.
-
 ## Installation
 
-### Using pip
+### Development Installation (Recommended)
 
 ```bash
-pip install matplotlib adjustText pandas
+# Clone the repository
+git clone https://github.com/hugojosefson/scatter-svg
+cd scatter-svg
+
+# Install in editable mode with development dependencies
+pip install -e ".[dev]"
+```
+
+### Production Installation
+
+```bash
+pip install scatter-svg
 ```
 
 ### Using Docker
@@ -102,9 +30,157 @@ pip install matplotlib adjustText pandas
 docker pull docker.io/hugojosefson/scatter-svg
 ```
 
+## Quick Start
+
+After installation, use the `scatter-svg` command:
+
+```bash
+# From JSON stdin
+cat examples/model-data-example.json | scatter-svg > output.svg
+
+# From CSV stdin (auto-detected)
+cat examples/model-data-example.csv | scatter-svg > output.svg
+
+# From file with custom options
+scatter-svg examples/model-data-example.json output.svg --width 12 --height 8
+
+# Generate PNG instead of SVG
+scatter-svg examples/model-data-example.csv output.png --format png
+```
+
+## Usage
+
+### Command Line Interface
+
+```bash
+scatter-svg [INPUT] [OUTPUT] [OPTIONS]
+
+Arguments:
+  INPUT                Input file (JSON or CSV), or use stdin if omitted
+  OUTPUT               Output file (SVG, PNG, PDF), or use stdout if omitted
+
+Options:
+  --format FORMAT      Output format: svg, png, pdf (default: svg)
+  --width INCHES       Figure width in inches (default: 12)
+  --height INCHES      Figure height in inches (default: 8)
+  --style STYLE        Matplotlib style (default, seaborn, ggplot, etc.)
+  --dpi DPI            DPI for PNG output (default: 300)
+```
+
+### As a Python Library
+
+```python
+from scatter_svg import create_scatter_plot, save_figure, load_data_file
+
+# Load data from file (auto-detects CSV or JSON)
+data = load_data_file('examples/model-data-example.csv')
+
+# Create plot
+fig = create_scatter_plot(data, figsize=(12, 8))
+
+# Save to file
+save_figure(fig, 'output.svg', format='svg')
+```
+
+### Stdin/Stdout Pipeline (Unix-style)
+
+```bash
+# JSON input automatically detected
+cat data.json | scatter-svg > output.svg
+
+# CSV input automatically detected
+cat data.csv | scatter-svg --format png > output.png
+
+# Docker usage
+cat data.json | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
+```
+
+## Input Format
+
+### JSON Format
+
+```json
+{
+  "title": "Model Speed vs Quality",
+  "xlabel": "Response Time (ms)",
+  "ylabel": "Quality Tier",
+  "points": [
+    { "x": 556, "y": 4, "label": "llama-4-scout" },
+    { "x": 666, "y": 5, "label": "gpt-4o-mini" }
+  ]
+}
+```
+
+### CSV Format
+
+```csv
+label,x,y
+llama-4-scout,556,4
+gpt-4o-mini,666,5
+```
+
+**Note**: Stdin input automatically detects JSON vs CSV format. The tool tries
+to parse as JSON first, then falls back to CSV if JSON parsing fails.
+
+See `examples/model-data-example.json` and `examples/model-data-example.csv` for
+complete examples.
+
+## Project Structure
+
+```
+scatter-svg/
+├── src/
+│   └── scatter_svg/
+│       ├── __init__.py       # Package exports
+│       ├── __main__.py       # CLI entry point
+│       └── plot.py           # Core plotting logic
+├── tests/
+│   ├── __init__.py
+│   └── test_plot.py          # Comprehensive unit tests
+├── examples/
+│   ├── model-data-example.json
+│   └── model-data-example.csv
+├── pyproject.toml            # Package configuration
+├── README.md
+├── Dockerfile
+└── build.sh
+```
+
+## Development
+
+### Running Tests
+
+```bash
+# Install with development dependencies
+pip install -e ".[dev]"
+
+# Run tests
+python -m pytest tests/
+
+# Run tests with coverage
+python -m pytest tests/ --cov=scatter_svg --cov-report=html
+
+# Run specific test
+python -m unittest tests.test_plot.TestStdinAutodetection -v
+```
+
+### Code Quality
+
+```bash
+# Format code
+black src/ tests/
+
+# Lint code
+ruff check src/ tests/
+```
+
 ### Building from Source
 
 ```bash
+# Build Python package
+pip install build
+python -m build
+
 # Build Docker image
 ./build.sh
 
@@ -118,9 +194,12 @@ docker pull docker.io/hugojosefson/scatter-svg
   intelligent label positioning
 - 🎨 **Multiple Output Formats**: SVG (vector), PNG, and PDF support
 - 📥 **Flexible Input**: JSON or CSV via stdin or file
+- 🔍 **Auto-detection**: Automatically detects JSON vs CSV from stdin
 - 📤 **Pipeline Friendly**: Stdin → stdout workflow for Unix pipelines
 - 🐳 **Docker Support**: Pre-built image for zero-install usage
+- 📦 **Pip Installable**: Standard Python package with CLI entry point
 - ⚙️ **Customizable**: Configure dimensions, labels, titles, and formats
+- 🧪 **Well Tested**: Comprehensive test suite with high coverage
 
 ## Docker Image
 
@@ -129,14 +208,13 @@ docker pull docker.io/hugojosefson/scatter-svg
 The Docker image includes all dependencies pre-installed and exposes the scatter
 plot generator as the entrypoint.
 
-## Examples
+## Additional Documentation
 
-See the included example files:
-
-- `model-data-example.json` - Example JSON input
-- `model-data-example.csv` - Example CSV input
+- `examples/` - Example JSON and CSV input files
 - `VISUALIZATION-IMPLEMENTATION.md` - Implementation details
 - `visualization-tools-comparison.md` - Tool comparison and decision rationale
+- `TEST-README.md` - Testing documentation
+- `TESTING-SUMMARY.md` - Test results summary
 
 ## License
 

@@ -1,6 +1,7 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
-RUN pip install --no-cache-dir matplotlib adjustText pandas
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY plot-models-scatter.py /usr/local/bin/scatter-svg
 RUN chmod +x /usr/local/bin/scatter-svg
