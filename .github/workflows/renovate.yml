@@ -3,9 +3,9 @@ name: Renovate
 on:
   schedule:
     # Run every Monday at 6 AM UTC
-    - cron: '0 6 * * 1'
+    - cron: "0 6 * * 1"
   workflow_dispatch:
-    # Allow manual triggering
+# Allow manual triggering
 
 jobs:
   renovate:

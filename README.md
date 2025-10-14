@@ -5,15 +5,23 @@ matplotlib + adjustText.
 
 ## Usage (Docker)
 
+### Basic Usage
+
 ```bash
 # JSON/CSV from stdin → SVG to stdout
 cat data.json | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
 cat data.csv | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
+```
 
-# PNG output
+### PNG Output
+
+```bash
 cat data.json | docker run -i docker.io/hugojosefson/scatter-svg --format png > output.png
+```
 
-# Try with example data
+### Example Data
+
+```bash
 cat examples/model-data-example.json | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
 cat examples/model-data-example.csv | docker run -i docker.io/hugojosefson/scatter-svg > output.svg
 ```
