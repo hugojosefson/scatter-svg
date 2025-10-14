@@ -1,10 +1,10 @@
-# Unit Tests for plot-models-scatter.py
+# Testing Guide
 
-Comprehensive test suite using Python's built-in `unittest` framework.
+Comprehensive test suite using `pytest` for the scatter-svg package.
 
 ## Test Coverage
 
-The test suite (`test_plot_models_scatter.py`) covers:
+The test suite (`tests/test_plot.py`) covers:
 
 ### 1. File Format Detection
 
@@ -68,12 +68,21 @@ The test suite (`test_plot_models_scatter.py`) covers:
 
 ## Running the Tests
 
-### Prerequisites
-
-Install dependencies (if not already installed):
-
 ```bash
-pip install -r requirements.txt
+# Install with development dependencies
+pip install -e ".[dev]"
+
+# Run all tests
+pytest tests/
+
+# Run with verbose output
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=scatter_svg --cov-report=html
+
+# Run specific test file
+pytest tests/test_plot.py -v
 ```
 
 The `unittest` module is built into Python, so no additional test dependencies
@@ -120,8 +129,16 @@ python -m unittest test_plot_models_scatter.TestFileFormatDetection.test_detect_
 
 ## Expected Output
 
-### Successful Run (Verbose)
+```
+============================= test session starts ==============================
+platform linux -- Python 3.14.0
+collected 40 tests
 
+tests/test_plot.py::TestStdinAutodetection::test_detect_json PASSED
+tests/test_plot.py::TestStdinAutodetection::test_detect_csv PASSED
+...
+
+============================== 40 passed in 0.50s ==============================
 ```
 test_create_scatter_plot_basic ... ok
 test_create_scatter_plot_custom_figsize ... ok
@@ -160,80 +177,50 @@ FAILED (failures=1)
 ## Test Structure
 
 ```
-test_plot_models_scatter.py
-├── TestFileFormatDetection (7 tests)
-│   ├── Extension-based detection
-│   └── Content-based fallback
-├── TestJSONLoading (4 tests)
-│   ├── File loading
-│   └── Stdin loading
-├── TestCSVLoading (6 tests)
-│   ├── Column detection
-│   └── Data parsing
-├── TestDataFileLoading (2 tests)
-│   └── Integrated loading
-├── TestEdgeCases (7 tests)
-│   ├── Empty data
-│   ├── Single points
-│   └── Malformed input
-├── TestScatterPlotCreation (4 tests)
-│   └── Matplotlib integration
-├── TestFigureSaving (4 tests)
-│   └── Output handling
-└── TestRealFileOperations (4 tests)
-    └── Integration tests
+tests/test_plot.py
+├── TestStdinAutodetection - Automatic JSON/CSV detection
+├── TestFileFormatDetection - Extension-based detection
+├── TestJSONLoading - JSON parsing (file + stdin)
+├── TestCSVLoading - CSV parsing with flexible columns
+├── TestDataFileLoading - Integrated file loading
+├── TestEdgeCases - Empty data, malformed input
+├── TestScatterPlotCreation - Matplotlib integration
+├── TestFigureSaving - Output to file/stdout
+└── TestRealFileOperations - Integration with temp files
 ```
 
 ## Mocking Strategy
 
-The tests use `unittest.mock` to avoid external dependencies:
+Tests use `unittest.mock` to avoid external dependencies:
 
 - **File I/O**: Mocked with `mock_open()` and `patch('builtins.open')`
 - **Pandas**: Mocked DataFrames returned from `read_csv()`
 - **Matplotlib**: Mocked figure/axes objects
 - **stdin**: Mocked with `io.StringIO()`
 
-This approach:
-
-- ✅ Tests run fast (no actual file I/O)
-- ✅ No side effects (no files created)
-- ✅ Deterministic (no external state)
-- ✅ Tests logic, not dependencies
+This approach ensures tests run fast, have no side effects, are deterministic, and test logic rather than dependencies.
 
 ## Continuous Integration
 
-To integrate with CI/CD pipelines:
+For CI/CD pipelines:
 
 ```bash
-# Run tests and exit with proper code
-python -m unittest test_plot_models_scatter.py
-
-# Check exit code
-if [ $? -eq 0 ]; then
-    echo "All tests passed!"
-else
-    echo "Tests failed!"
-    exit 1
-fi
+# Run tests with proper exit code
+pytest tests/
 ```
 
-## Coverage Analysis (Optional)
+See `.github/workflows/ci.yml` for the GitHub Actions setup.
+
+## Coverage Analysis
 
 To measure code coverage:
 
 ```bash
-# Install coverage tool
-pip install coverage
-
 # Run tests with coverage
-coverage run -m unittest test_plot_models_scatter.py
+pytest tests/ --cov=scatter_svg --cov-report=html
 
-# Generate report
-coverage report -m
-
-# Generate HTML report
-coverage html
-# Open htmlcov/index.html in browser
+# View report
+open htmlcov/index.html
 ```
 
 ## Troubleshooting
@@ -244,51 +231,21 @@ If you see `ModuleNotFoundError`:
 
 ```bash
 # Ensure dependencies are installed
-pip install matplotlib adjustText pandas
-
-# Ensure you're in the correct directory
-cd /path/to/scatter-svg
+pip install -e ".[dev]"
 ```
-
-### IDE Warnings
-
-Static analysis tools may show import warnings for:
-
-- `plot_models_scatter`
-- `matplotlib`
-- `pandas`
-- `adjustText`
-
-These are expected and will not affect test execution.
 
 ## Adding New Tests
 
 To add tests for new functionality:
 
-1. **Create a new test class**:
-
-```python
-class TestNewFeature(unittest.TestCase):
-    """Test description."""
-    
-    def test_something(self):
-        """Should do something."""
-        result = some_function()
-        self.assertEqual(result, expected)
-```
-
-2. **Use descriptive names**: `test_<action>_<expected_result>`
-
-3. **Add docstrings**: Brief description of what the test validates
-
-4. **Follow AAA pattern**:
-   - **Arrange**: Set up test data
-   - **Act**: Call function under test
-   - **Assert**: Verify results
+1. Add test methods to appropriate test class in `tests/test_plot.py`
+2. Use descriptive names: `test_<action>_<expected_result>`
+3. Add docstrings explaining what the test validates
+4. Follow AAA pattern: Arrange, Act, Assert
 
 ## Test Philosophy
 
-These tests follow best practices:
+Tests follow best practices:
 
 - **Unit Tests**: Test individual functions in isolation
 - **Mocking**: Avoid external dependencies (files, network)
@@ -299,14 +256,16 @@ These tests follow best practices:
 
 ## Dependencies
 
-```txt
-# Production dependencies (required to run tests)
-matplotlib>=3.5.0
-adjustText>=0.8
-pandas>=1.3.0
+Development dependencies (defined in `pyproject.toml`):
 
-# Test dependencies (built-in)
-unittest (Python standard library)
+```toml
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1.0"
+]
 ```
 
-No additional test framework dependencies required!
+Install with: `pip install -e ".[dev]"`

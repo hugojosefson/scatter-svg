@@ -211,10 +211,8 @@ plot generator as the entrypoint.
 ## Additional Documentation
 
 - `examples/` - Example JSON and CSV input files
-- `VISUALIZATION-IMPLEMENTATION.md` - Implementation details
-- `visualization-tools-comparison.md` - Tool comparison and decision rationale
 - `TEST-README.md` - Testing documentation
-- `TESTING-SUMMARY.md` - Test results summary
+- `VISUALIZATION-IMPLEMENTATION.md` - Implementation details and advanced usage
 
 ## License
 
