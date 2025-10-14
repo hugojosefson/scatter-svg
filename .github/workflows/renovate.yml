@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
   # Trigger when dependency files change
   push:
+    branches:
+      - main
     paths:
       - "pyproject.toml"
       - "Dockerfile"

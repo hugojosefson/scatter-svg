@@ -3,13 +3,33 @@
   "extends": [
     "config:recommended"
   ],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard",
   "schedule": [
     "before 6am on Monday"
   ],
+  "rebaseWhen": "behind-base-branch",
+  "pinDigests": true,
   "packageRules": [
     {
       "matchManagers": ["pip_requirements", "pip_setup"],
       "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0\\./",
+      "automerge": true,
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchManagers": ["pip_requirements", "pip_setup"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "reviewersFromCodeOwners": true
+    },
+    {
+      "matchManagers": ["pip_requirements", "pip_setup"],
+      "matchDepTypes": ["dependencies"],
+      "matchCurrentVersion": "/^0\\./",
       "automerge": false,
       "reviewersFromCodeOwners": true
     },
@@ -22,6 +42,20 @@
       "matchManagers": ["github-actions"],
       "automerge": true,
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchDatasources": ["pypi"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchDatasources": ["pypi"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0\\./",
+      "vulnerabilityAlerts": {
+        "enabled": true,
+        "minimumReleaseAge": null
+      }
     }
   ],
   "pip_setup": {
@@ -29,10 +63,15 @@
   },
   "vulnerabilityAlerts": {
     "enabled": true,
-    "automerge": true
+    "automerge": true,
+    "minimumReleaseAge": null
   },
   "lockFileMaintenance": {
-    "enabled": false
+    "enabled": true,
+    "schedule": [
+      "before 6am on Monday"
+    ],
+    "automerge": true
   },
   "platformAutomerge": true,
   "prConcurrentLimit": 5,
