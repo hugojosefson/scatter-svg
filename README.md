@@ -28,8 +28,22 @@ cat examples/model-data-example.csv | docker run -i docker.io/hugojosefson/scatt
 
 ## Build
 
+Build the Docker image:
+
 ```bash
-./docker-build
+make docker-build
+```
+
+Build and push to Docker Hub:
+
+```bash
+make docker-push
+```
+
+Run the Docker test stage (includes linting and tests):
+
+```bash
+make docker-test
 ```
 
 ## Development
