@@ -9,6 +9,7 @@
     "before 6am on Monday"
   ],
   "rebaseWhen": "behind-base-branch",
+  "automergeStrategy": "rebase",
   "pinDigests": true,
   "packageRules": [
     {
