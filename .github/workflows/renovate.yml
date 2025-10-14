@@ -5,7 +5,13 @@ on:
     # Run every Monday at 6 AM UTC
     - cron: "0 6 * * 1"
   workflow_dispatch:
-# Allow manual triggering
+  # Trigger when dependency files change
+  push:
+    paths:
+      - "pyproject.toml"
+      - "Dockerfile"
+      - ".github/workflows/*.yml"
+      - ".github/renovate.json"
 
 jobs:
   renovate:
@@ -22,3 +28,4 @@ jobs:
         env:
           LOG_LEVEL: info
           RENOVATE_AUTODISCOVER: false
+          RENOVATE_REPOSITORIES: '["${{ github.repository }}"]'
