@@ -2,7 +2,8 @@
 
 ## Quick Start: Python matplotlib + adjustText
 
-Based on our research, **Python matplotlib + adjustText** is the recommended solution for creating scatter plots with automatic label collision avoidance.
+Based on our research, **Python matplotlib + adjustText** is the recommended
+solution for creating scatter plots with automatic label collision avoidance.
 
 ---
 
@@ -142,12 +143,14 @@ subprocess.run([
 ```
 
 **Required fields:**
+
 - `points`: Array of objects
 - `points[].x`: Number (X coordinate)
-- `points[].y`: Number (Y coordinate)  
+- `points[].y`: Number (Y coordinate)
 - `points[].label`: String (point label)
 
 **Optional fields:**
+
 - `title`: String (plot title)
 - `xlabel`: String (X-axis label)
 - `ylabel`: String (Y-axis label)
@@ -161,6 +164,7 @@ point-2,200,4
 ```
 
 **Flexible column names** (auto-detected):
+
 - **Label column**: Any name containing "label", "name", or first column
 - **X column**: Any name containing "x", "speed", "time", or second column
 - **Y column**: Any name containing "y", "quality", "tier", or third column
@@ -175,15 +179,15 @@ point-2,200,4
 python plot-models-scatter.py --help
 ```
 
-| Argument | Type | Default | Description |
-|:---------|:-----|:--------|:------------|
-| `input` | str | stdin | Input file (JSON/CSV) or "-" for stdin |
-| `output` | str | stdout | Output file (SVG/PNG/PDF) or omit for stdout |
-| `--width` | float | 12 | Figure width in inches |
-| `--height` | float | 8 | Figure height in inches |
-| `--style` | str | default | Matplotlib style (seaborn, ggplot, etc.) |
-| `--format` | str | auto | Output format (svg, png, pdf) |
-| `--dpi` | int | 300 | Resolution for PNG output |
+| Argument   | Type  | Default | Description                                  |
+| :--------- | :---- | :------ | :------------------------------------------- |
+| `input`    | str   | stdin   | Input file (JSON/CSV) or "-" for stdin       |
+| `output`   | str   | stdout  | Output file (SVG/PNG/PDF) or omit for stdout |
+| `--width`  | float | 12      | Figure width in inches                       |
+| `--height` | float | 8       | Figure height in inches                      |
+| `--style`  | str   | default | Matplotlib style (seaborn, ggplot, etc.)     |
+| `--format` | str   | auto    | Output format (svg, png, pdf)                |
+| `--dpi`    | int   | 300     | Resolution for PNG output                    |
 
 ### Available Styles
 
@@ -197,6 +201,7 @@ Try different matplotlib styles with `--style`:
 - `grayscale` - Grayscale output
 
 Example:
+
 ```bash
 python plot-models-scatter.py input.csv output.svg --style seaborn
 ```
@@ -224,8 +229,9 @@ adjust_text(
 **Common adjustments:**
 
 - **Too crowded**: Increase `expand_points` to (2.0, 2.0)
-- **Labels too far**: Decrease `expand_points` to (1.0, 1.0)  
-- **Still overlapping**: Increase `lim` to 1000 and force parameters to (1.0, 1.0)
+- **Labels too far**: Decrease `expand_points` to (1.0, 1.0)
+- **Still overlapping**: Increase `lim` to 1000 and force parameters to (1.0,
+  1.0)
 - **Slow performance**: Decrease `lim` to 200
 
 ### Custom Color Schemes
@@ -326,29 +332,29 @@ name: Generate Model Performance Plot
 on:
   push:
     paths:
-      - 'model-test-state.json'
+      - "model-test-state.json"
 
 jobs:
   plot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install dependencies
         run: pip install matplotlib adjustText pandas
-      
+
       - name: Generate plot
         run: |
-          jq '{points: [.testedModels[] | select(.available) | 
+          jq '{points: [.testedModels[] | select(.available) |
               {x: .responseTime, y: .qualityScore, label: .id}]}' \
             model-test-state.json | \
           python plot-models-scatter.py > model-performance.svg
-      
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -430,15 +436,15 @@ plt.rcParams['font.family'] = 'DejaVu Sans'
 
 Tested on Ubuntu 22.04, Python 3.11, Intel i7:
 
-| Points | Resolution | Format | Time   | File Size |
-|-------:|:-----------|:-------|-------:|----------:|
-| 10     | 1200×800   | SVG    | 0.8s   | 45 KB     |
-| 30     | 1200×800   | SVG    | 1.2s   | 120 KB    |
-| 50     | 1200×800   | SVG    | 1.8s   | 180 KB    |
-| 100    | 1200×800   | SVG    | 3.5s   | 320 KB    |
-| 10     | 1200×800   | PNG    | 1.0s   | 85 KB     |
-| 30     | 1200×800   | PNG    | 1.4s   | 95 KB     |
-| 50     | 1200×800   | PNG    | 2.1s   | 110 KB    |
+| Points | Resolution | Format | Time | File Size |
+| -----: | :--------- | :----- | ---: | --------: |
+|     10 | 1200×800   | SVG    | 0.8s |     45 KB |
+|     30 | 1200×800   | SVG    | 1.2s |    120 KB |
+|     50 | 1200×800   | SVG    | 1.8s |    180 KB |
+|    100 | 1200×800   | SVG    | 3.5s |    320 KB |
+|     10 | 1200×800   | PNG    | 1.0s |     85 KB |
+|     30 | 1200×800   | PNG    | 1.4s |     95 KB |
+|     50 | 1200×800   | PNG    | 2.1s |    110 KB |
 
 **Note**: Times include label collision adjustment (500 iterations).
 
@@ -508,6 +514,7 @@ ggsave(output_file, p, width = 12, height = 8)
 ```
 
 Usage:
+
 ```bash
 # Make executable
 chmod +x plot.R
@@ -523,7 +530,8 @@ cat examples/model-data-example.json | ./plot.R - output.svg
 
 ## Next Steps
 
-1. **Test with your data**: Use `examples/model-data-example.json` to verify setup
+1. **Test with your data**: Use `examples/model-data-example.json` to verify
+   setup
 2. **Customize styling**: Adjust colors, fonts, and layout to match your needs
 3. **Integrate into workflow**: Add to build scripts, CI/CD, or automation
 4. **Scale testing**: Test with your actual model count (30-40 points)

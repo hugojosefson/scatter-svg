@@ -2,7 +2,8 @@
 
 **Scatter Plot Generator with Automatic Label Collision Avoidance**
 
-Python tool using matplotlib + adjustText for collision-free scatter plots with professional-quality output.
+Python tool using matplotlib + adjustText for collision-free scatter plots with
+professional-quality output.
 
 ## Quick Start
 
@@ -84,7 +85,8 @@ Point A,1.5,2.3
 Point B,2.7,1.8
 ```
 
-See `model-data-example.json` and `model-data-example.csv` for complete examples.
+See `model-data-example.json` and `model-data-example.csv` for complete
+examples.
 
 ## Installation
 
@@ -112,7 +114,8 @@ docker pull docker.io/hugojosefson/scatter-svg
 
 ## Features
 
-- 📊 **Automatic Label Collision Avoidance**: Uses adjustText library for intelligent label positioning
+- 📊 **Automatic Label Collision Avoidance**: Uses adjustText library for
+  intelligent label positioning
 - 🎨 **Multiple Output Formats**: SVG (vector), PNG, and PDF support
 - 📥 **Flexible Input**: JSON or CSV via stdin or file
 - 📤 **Pipeline Friendly**: Stdin → stdout workflow for Unix pipelines
@@ -123,11 +126,13 @@ docker pull docker.io/hugojosefson/scatter-svg
 
 **Repository**: `docker.io/hugojosefson/scatter-svg`
 
-The Docker image includes all dependencies pre-installed and exposes the scatter plot generator as the entrypoint.
+The Docker image includes all dependencies pre-installed and exposes the scatter
+plot generator as the entrypoint.
 
 ## Examples
 
 See the included example files:
+
 - `model-data-example.json` - Example JSON input
 - `model-data-example.csv` - Example CSV input
 - `VISUALIZATION-IMPLEMENTATION.md` - Implementation details

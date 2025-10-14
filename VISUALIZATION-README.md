@@ -1,6 +1,7 @@
 # Visualization Research: Label Collision Avoidance
 
-Quick navigation for scatter plot visualization with automatic label collision avoidance.
+Quick navigation for scatter plot visualization with automatic label collision
+avoidance.
 
 ## 📁 Documentation Files
 
@@ -9,7 +10,8 @@ Quick navigation for scatter plot visualization with automatic label collision a
 1. **[visualization-tools-comparison.md](./visualization-tools-comparison.md)**
    - Comprehensive research on 5+ visualization tools
    - Detailed pros/cons, stdin/stdout support analysis
-   - Only 2 tools have TRUE collision avoidance: Python matplotlib + adjustText, R ggplot2 + ggrepel
+   - Only 2 tools have TRUE collision avoidance: Python matplotlib + adjustText,
+     R ggplot2 + ggrepel
    - Full comparison matrix and recommendations
 
 2. **[VISUALIZATION-IMPLEMENTATION.md](./VISUALIZATION-IMPLEMENTATION.md)**
@@ -54,10 +56,10 @@ pip install matplotlib adjustText pandas
 
 ### ✅ Tools with Collision Avoidance
 
-| Tool | Runtime | Effort | Status |
-|:-----|:--------|:-------|:-------|
-| **Python matplotlib + adjustText** | Python 3.x | Medium | ⭐ **RECOMMENDED** |
-| **R ggplot2 + ggrepel** | R 4.x | Medium-High | ⭐ Alternative |
+| Tool                               | Runtime    | Effort      | Status             |
+| :--------------------------------- | :--------- | :---------- | :----------------- |
+| **Python matplotlib + adjustText** | Python 3.x | Medium      | ⭐ **RECOMMENDED** |
+| **R ggplot2 + ggrepel**            | R 4.x      | Medium-High | ⭐ Alternative     |
 
 ### ❌ Tools WITHOUT Collision Avoidance
 
@@ -73,11 +75,13 @@ pip install matplotlib adjustText pandas
 
 ## 📖 Use Case
 
-**Problem**: Create scatter plot with ~30-40 labeled points (AI model performance: speed vs quality)
+**Problem**: Create scatter plot with ~30-40 labeled points (AI model
+performance: speed vs quality)
 
 **Critical Requirement**: Labels must NOT overlap each other or data points
 
 **Solution**: Python matplotlib + adjustText
+
 - Iterative force-directed algorithm
 - Repels labels from points, edges, and each other
 - Configurable repulsion forces
@@ -105,7 +109,8 @@ pip install matplotlib adjustText pandas
 
 - [model-research.md](./model-research.md) - GitHub Models API research
 - [model-test-state.json](./model-test-state.json) - Test results data source
-- [github-copilot-model-test-results.md](./github-copilot-model-test-results.md) - OpenCode model testing
+- [github-copilot-model-test-results.md](./github-copilot-model-test-results.md) -
+  OpenCode model testing
 
 ## 💡 Usage Examples
 
@@ -134,10 +139,11 @@ Edit `plot-models-scatter.py` to adjust:
 - **Grid**: Adjust `ax.grid()` alpha, linestyle
 - **Background**: Modify bbox facecolor, edgecolor
 
-See [VISUALIZATION-IMPLEMENTATION.md](./VISUALIZATION-IMPLEMENTATION.md) for detailed customization guide.
+See [VISUALIZATION-IMPLEMENTATION.md](./VISUALIZATION-IMPLEMENTATION.md) for
+detailed customization guide.
 
 ---
 
-**Research Status**: ✅ Complete  
-**Implementation Status**: ✅ Production-ready script available  
+**Research Status**: ✅ Complete\
+**Implementation Status**: ✅ Production-ready script available\
 **Last Updated**: October 14, 2025

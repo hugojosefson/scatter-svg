@@ -2,10 +2,13 @@
 
 ## Overview
 
-Comprehensive research comparing visualization tools for creating scatter plots with **automatic label collision avoidance** - the primary requirement for plotting model data (X=speed, Y=quality tiers).
+Comprehensive research comparing visualization tools for creating scatter plots
+with **automatic label collision avoidance** - the primary requirement for
+plotting model data (X=speed, Y=quality tiers).
 
-**Research Date**: October 14, 2025  
-**Use Case**: Scatter plot with ~30-40 labeled points requiring collision-free text labels  
+**Research Date**: October 14, 2025\
+**Use Case**: Scatter plot with ~30-40 labeled points requiring collision-free
+text labels\
 **Critical Requirement**: Automatic label positioning to avoid overlaps
 
 ---
@@ -25,7 +28,8 @@ All JavaScript-based visualization libraries lack this feature:
 
 - **Vega-Lite**: No collision avoidance (only truncation via `limit`)
 - **Observable Plot**: No collision avoidance (manual filtering required)
-- **Plotly.js**: No collision avoidance (`textposition: "auto"` only for single points)
+- **Plotly.js**: No collision avoidance (`textposition: "auto"` only for single
+  points)
 
 ---
 
@@ -33,8 +37,8 @@ All JavaScript-based visualization libraries lack this feature:
 
 ### 1. Python matplotlib + adjustText ✅
 
-**Status**: **FULL COLLISION AVOIDANCE**  
-**Runtime**: Python 3.x  
+**Status**: **FULL COLLISION AVOIDANCE**\
+**Runtime**: Python 3.x\
 **License**: MIT (adjustText), BSD-compatible (matplotlib)
 
 #### Key Features
@@ -86,7 +90,8 @@ plt.savefig('output.png', dpi=300)
 
 #### Stdin/Stdout Support
 
-Python scripts don't natively support stdin→stdout for image generation, but can be wrapped:
+Python scripts don't natively support stdin→stdout for image generation, but can
+be wrapped:
 
 ```python
 #!/usr/bin/env python3
@@ -137,8 +142,8 @@ sys.stdout.write(output.getvalue())
 
 ### 2. R ggplot2 + ggrepel ✅
 
-**Status**: **FULL COLLISION AVOIDANCE**  
-**Runtime**: R 4.x  
+**Status**: **FULL COLLISION AVOIDANCE**\
+**Runtime**: R 4.x\
 **License**: GPL-3 (ggplot2, ggrepel)
 
 #### Key Features
@@ -234,37 +239,40 @@ ggsave(stdout(), p, device = "svg", width = 10, height = 6)
 
 ### 3. Vega-Lite ❌
 
-**Status**: **NO COLLISION AVOIDANCE**  
-**Runtime**: Browser / Node.js (vega-cli)  
+**Status**: **NO COLLISION AVOIDANCE**\
+**Runtime**: Browser / Node.js (vega-cli)\
 **License**: BSD-3-Clause
 
 #### Research Findings
 
 - **Text mark properties**: Only `limit` (character truncation) available
-- **No `labelOverlap` parameter**: This exists only for axis/legend labels, NOT for text marks
+- **No `labelOverlap` parameter**: This exists only for axis/legend labels, NOT
+  for text marks
 - **No automatic positioning**: Text marks require manual `dx`/`dy` offsets
 - **Workaround**: Manual coordinate calculation in data preprocessing
 
 #### Documentation Review
 
 Examined:
+
 - Text mark documentation
 - Label configuration options
 - Mark properties reference
 - Encoding channels
 
-**Conclusion**: Vega-Lite does NOT support automatic label collision avoidance for scatter plot point labels.
+**Conclusion**: Vega-Lite does NOT support automatic label collision avoidance
+for scatter plot point labels.
 
 #### Example (Manual Positioning Required)
 
 ```json
 {
-  "data": {"url": "models.csv"},
-  "mark": {"type": "text", "dx": 5, "dy": -5},
+  "data": { "url": "models.csv" },
+  "mark": { "type": "text", "dx": 5, "dy": -5 },
   "encoding": {
-    "x": {"field": "speed", "type": "quantitative"},
-    "y": {"field": "quality", "type": "quantitative"},
-    "text": {"field": "name", "type": "nominal"}
+    "x": { "field": "speed", "type": "quantitative" },
+    "y": { "field": "quality", "type": "quantitative" },
+    "text": { "field": "name", "type": "nominal" }
   }
 }
 ```
@@ -293,14 +301,15 @@ cat spec.json | vl2png > output.png
 
 #### Effort Level
 
-**Low** (for basic plots) / **Very High** (for collision-free labels via preprocessing)
+**Low** (for basic plots) / **Very High** (for collision-free labels via
+preprocessing)
 
 ---
 
 ### 4. Observable Plot ❌
 
-**Status**: **NO COLLISION AVOIDANCE**  
-**Runtime**: Browser / Node.js  
+**Status**: **NO COLLISION AVOIDANCE**\
+**Runtime**: Browser / Node.js\
 **License**: ISC
 
 #### Research Findings
@@ -313,12 +322,14 @@ cat spec.json | vl2png > output.png
 #### Documentation Review
 
 Examined:
+
 - Text mark documentation
 - Label strategies discussion
 - Community feature requests
 - Official examples
 
-**Conclusion**: Observable Plot explicitly lacks automatic label collision avoidance and recommends manual filtering.
+**Conclusion**: Observable Plot explicitly lacks automatic label collision
+avoidance and recommends manual filtering.
 
 #### Example (Manual Filtering Required)
 
@@ -327,13 +338,13 @@ import * as Plot from "@observablehq/plot";
 
 Plot.plot({
   marks: [
-    Plot.dot(data, {x: "speed", y: "quality"}),
+    Plot.dot(data, { x: "speed", y: "quality" }),
     Plot.text(
-      data.filter((d, i) => i % 3 === 0),  // Manual: show every 3rd label
-      {x: "speed", y: "quality", text: "name", dx: 5}
-    )
-  ]
-})
+      data.filter((d, i) => i % 3 === 0), // Manual: show every 3rd label
+      { x: "speed", y: "quality", text: "name", dx: 5 },
+    ),
+  ],
+});
 ```
 
 #### Stdin/Stdout Support
@@ -355,19 +366,21 @@ Not designed for stdin→stdout pipelines. Requires browser or JSDOM environment
 
 #### Effort Level
 
-**Low** (for basic plots) / **Very High** (for collision-free labels via filtering)
+**Low** (for basic plots) / **Very High** (for collision-free labels via
+filtering)
 
 ---
 
 ### 5. Plotly.js ❌
 
-**Status**: **NO TRUE COLLISION AVOIDANCE**  
-**Runtime**: Browser / Node.js (plotly-orca / kaleido)  
+**Status**: **NO TRUE COLLISION AVOIDANCE**\
+**Runtime**: Browser / Node.js (plotly-orca / kaleido)\
 **License**: MIT
 
 #### Research Findings
 
-- **`textposition: "auto"`**: Only positions text relative to SINGLE point (top/bottom/left/right)
+- **`textposition: "auto"`**: Only positions text relative to SINGLE point
+  (top/bottom/left/right)
 - **No inter-label collision detection**: Labels can overlap each other
 - **Use case**: Designed for small number of labels or interactive tooltips
 - **Not suitable**: Dense scatter plots with many labels
@@ -375,12 +388,14 @@ Not designed for stdin→stdout pipelines. Requires browser or JSDOM environment
 #### Documentation Review
 
 Examined:
+
 - Scatter plot text annotations
 - `textposition` parameter behavior
 - Layout annotation options
 - Kaleido export capabilities
 
-**Conclusion**: Plotly's "auto" positioning only handles single-point positioning, not multi-label collision avoidance.
+**Conclusion**: Plotly's "auto" positioning only handles single-point
+positioning, not multi-label collision avoidance.
 
 #### Example
 
@@ -388,9 +403,9 @@ Examined:
 const data = [{
   x: [1, 2, 3],
   y: [1, 2, 3],
-  text: ['A', 'B', 'C'],
-  mode: 'markers+text',
-  textposition: 'auto'  // Only positions relative to each point
+  text: ["A", "B", "C"],
+  mode: "markers+text",
+  textposition: "auto", // Only positions relative to each point
 }];
 
 // Export via Kaleido (Python required)
@@ -423,15 +438,16 @@ Limited - Kaleido (export tool) requires Python runtime and file I/O.
 
 ### gnuplot (Low Priority)
 
-**Status**: Not researched  
-**Expected**: Likely no automatic collision avoidance  
+**Status**: Not researched\
+**Expected**: Likely no automatic collision avoidance\
 **Reason for low priority**: Old tool, unlikely to have modern label algorithms
 
 ### Graphviz (Medium Priority)
 
-**Status**: Not researched  
-**Expected**: Might work as creative hack  
-**Notes**: 
+**Status**: Not researched\
+**Expected**: Might work as creative hack\
+**Notes**:
+
 - Designed for graph layouts, not scatter plots
 - Force-directed layout engine could repel labels
 - Would require translating scatter plot to graph structure
@@ -439,15 +455,16 @@ Limited - Kaleido (export tool) requires Python runtime and file I/O.
 
 ### Mermaid CLI (Low Priority)
 
-**Status**: Not researched  
-**Expected**: Not designed for scatter plots  
+**Status**: Not researched\
+**Expected**: Not designed for scatter plots\
 **Reason for low priority**: Focused on diagrams (flowcharts, sequence, etc.)
 
 ### D3.js Force Simulation (Medium Priority)
 
-**Status**: Not researched  
-**Expected**: Custom implementation required  
+**Status**: Not researched\
+**Expected**: Custom implementation required\
 **Notes**:
+
 - Force simulation can repel labels
 - Requires significant custom code
 - Example: Mike Bostock's force-directed labels
@@ -457,16 +474,16 @@ Limited - Kaleido (export tool) requires Python runtime and file I/O.
 
 ## Comparison Matrix
 
-| Tool                   | Collision Avoid | Runtime      | Stdin→Stdout | Effort | Export      | Recommendation      |
-| :--------------------- | :-------------- | :----------- | :----------- | :----- | :---------- | :------------------ |
-| **matplotlib + adjustText** | ✅ YES       | Python 3.x   | Via wrapper  | Medium | SVG/PNG/PDF | **Top choice**      |
-| **ggplot2 + ggrepel**  | ✅ YES          | R 4.x        | Via Rscript  | Medium | SVG/PNG/PDF | **Top choice**      |
-| Vega-Lite              | ❌ NO           | Node.js      | ✅ Native    | Low    | SVG/PNG     | Not suitable        |
-| Observable Plot        | ❌ NO           | Node.js      | ❌ Poor      | Low    | SVG         | Not suitable        |
-| Plotly.js              | ❌ NO           | Node.js/Py   | Limited      | High   | PNG/SVG     | Not suitable        |
-| gnuplot                | ❓ Unknown      | Native       | ✅ Native    | ?      | Many        | Not researched      |
-| Graphviz               | ❓ Maybe        | Native       | ✅ Native    | High   | SVG/PNG     | Worth exploring     |
-| D3.js force            | ⚠️ Custom       | Node.js      | ❌ Poor      | V.High | SVG         | Only if custom      |
+| Tool                        | Collision Avoid | Runtime    | Stdin→Stdout | Effort | Export      | Recommendation  |
+| :-------------------------- | :-------------- | :--------- | :----------- | :----- | :---------- | :-------------- |
+| **matplotlib + adjustText** | ✅ YES          | Python 3.x | Via wrapper  | Medium | SVG/PNG/PDF | **Top choice**  |
+| **ggplot2 + ggrepel**       | ✅ YES          | R 4.x      | Via Rscript  | Medium | SVG/PNG/PDF | **Top choice**  |
+| Vega-Lite                   | ❌ NO           | Node.js    | ✅ Native    | Low    | SVG/PNG     | Not suitable    |
+| Observable Plot             | ❌ NO           | Node.js    | ❌ Poor      | Low    | SVG         | Not suitable    |
+| Plotly.js                   | ❌ NO           | Node.js/Py | Limited      | High   | PNG/SVG     | Not suitable    |
+| gnuplot                     | ❓ Unknown      | Native     | ✅ Native    | ?      | Many        | Not researched  |
+| Graphviz                    | ❓ Maybe        | Native     | ✅ Native    | High   | SVG/PNG     | Worth exploring |
+| D3.js force                 | ⚠️ Custom       | Node.js    | ❌ Poor      | V.High | SVG         | Only if custom  |
 
 ---
 
@@ -487,6 +504,7 @@ Limited - Kaleido (export tool) requires Python runtime and file I/O.
 #### Alternative Solution: **R ggplot2 + ggrepel**
 
 Use if:
+
 - Already have R environment
 - Prefer declarative grammar of graphics
 - Need publication-quality defaults
@@ -572,6 +590,7 @@ sys.stdout.write(output.getvalue())
 ### Optional Follow-up Research
 
 If Python/R not viable:
+
 1. Research Graphviz as creative alternative
 2. Explore D3.js force simulation custom implementation
 3. Investigate gnuplot capabilities
@@ -598,10 +617,11 @@ If Python/R not viable:
 
 ### Academic References
 
-- Overlap removal algorithms: "A Fast and Simple Graph Drawing Algorithm for Network Visualization" (Dwyer et al.)
+- Overlap removal algorithms: "A Fast and Simple Graph Drawing Algorithm for
+  Network Visualization" (Dwyer et al.)
 - Label placement: "Point Feature Label Placement" (Christensen et al.)
 
 ---
 
-**Last Updated**: October 14, 2025  
+**Last Updated**: October 14, 2025\
 **Status**: Research complete for primary tools; ready for implementation phase
