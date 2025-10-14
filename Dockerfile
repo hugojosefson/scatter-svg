@@ -13,6 +13,9 @@ RUN pip install --no-cache-dir ".[dev]"
 COPY src/ /tmp/src/
 # Reinstall in editable mode to use the full source
 RUN pip install --no-cache-dir -e .
+# Run linting checks before tests
+RUN black --check src/
+RUN ruff check src/
 COPY tests/ /tmp/tests/
 RUN pytest tests/ -v
 
