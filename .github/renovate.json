@@ -1,0 +1,40 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": [
+    "before 6am on Monday"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["pip_requirements", "pip_setup"],
+      "matchDepTypes": ["dependencies"],
+      "automerge": false,
+      "reviewersFromCodeOwners": true
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "automerge": false,
+      "reviewersFromCodeOwners": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "automerge": true,
+      "matchUpdateTypes": ["minor", "patch"]
+    }
+  ],
+  "pip_setup": {
+    "fileMatch": ["pyproject\\.toml$"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "automerge": true
+  },
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "platformAutomerge": true,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2
+}
