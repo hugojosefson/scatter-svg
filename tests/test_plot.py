@@ -17,11 +17,9 @@ Run with:
 """
 
 import unittest
-from unittest.mock import mock_open, patch, MagicMock, call
+from unittest.mock import mock_open, patch, MagicMock
 import json
 import io
-import sys
-from pathlib import Path
 import tempfile
 import os
 
@@ -212,7 +210,6 @@ class TestCSVLoading(unittest.TestCase):
 
     def test_load_csv_standard_columns(self):
         """Should load CSV with standard column names (label,x,y)."""
-        csv_content = "label,x,y\nmodel-a,100,5\nmodel-b,200,4"
 
         with patch("pandas.read_csv") as mock_read_csv:
             import pandas as pd
@@ -231,7 +228,6 @@ class TestCSVLoading(unittest.TestCase):
 
     def test_load_csv_custom_columns(self):
         """Should detect custom column names (speed_ms, quality_tier)."""
-        csv_content = "label,speed_ms,quality_tier\nmodel-a,556,5"
 
         with patch("pandas.read_csv") as mock_read_csv:
             import pandas as pd
@@ -424,7 +420,7 @@ class TestScatterPlotCreation(unittest.TestCase):
             "ylabel": "Y Axis",
         }
 
-        fig = create_scatter_plot(data)
+        create_scatter_plot(data)
 
         # Verify scatter plot was called
         mock_ax.scatter.assert_called_once()
@@ -450,7 +446,7 @@ class TestScatterPlotCreation(unittest.TestCase):
 
         data = {"points": [{"x": 100, "y": 5, "label": "test"}]}
 
-        fig = create_scatter_plot(data)
+        create_scatter_plot(data)
 
         # Check default values were used
         calls = mock_ax.set_xlabel.call_args[0]
@@ -469,7 +465,7 @@ class TestScatterPlotCreation(unittest.TestCase):
 
         data = {"points": [{"x": 100, "y": 5, "label": "test"}]}
 
-        fig = create_scatter_plot(data, figsize=(10, 6))
+        create_scatter_plot(data, figsize=(10, 6))
 
         mock_subplots.assert_called_with(figsize=(10, 6))
 
@@ -487,7 +483,7 @@ class TestScatterPlotCreation(unittest.TestCase):
 
         data = {"points": [{"x": 100, "y": 5, "label": "test"}]}
 
-        fig = create_scatter_plot(data, style="seaborn")
+        create_scatter_plot(data, style="seaborn")
 
         mock_style.use.assert_called_with("seaborn")
 

@@ -234,7 +234,7 @@ def create_scatter_plot(data, figsize=(12, 8), style="default"):
         colors = "steelblue"
 
     # Plot scatter points
-    scatter = ax.scatter(
+    ax.scatter(
         x_values, y_values, s=100, c=colors, alpha=0.6, edgecolors="white", linewidth=1.5, zorder=2
     )
 
