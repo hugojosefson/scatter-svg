@@ -28,4 +28,3 @@ jobs:
         env:
           LOG_LEVEL: info
           RENOVATE_AUTODISCOVER: false
-          RENOVATE_REPOSITORIES: '["${{ github.repository }}"]'
